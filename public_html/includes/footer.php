@@ -17,20 +17,21 @@
     </div>
 </footer>
 
-<div id="cookie-notice" class="cookie-notice no-print" hidden>
+<div id="cookie-notice" class="cookie-notice no-print">
     <p>We use only the essential cookies needed to keep you signed in — no tracking or advertising cookies. See our <a href="/privacy.php">Privacy Policy</a>.</p>
     <button id="cookie-ack" class="btn btn-small">Got it</button>
 </div>
 <script>
 (function(){
     var KEY = 'c4a_cookie_ack';
+    var notice = document.getElementById('cookie-notice');
     if (!document.cookie.split('; ').some(function(c){ return c.indexOf(KEY + '=') === 0; })) {
-        document.getElementById('cookie-notice').hidden = false;
+        notice.classList.add('visible');
     }
     document.getElementById('cookie-ack').addEventListener('click', function(){
         var d = new Date(); d.setFullYear(d.getFullYear() + 1);
         document.cookie = KEY + '=1; expires=' + d.toUTCString() + '; path=/; SameSite=Lax';
-        document.getElementById('cookie-notice').hidden = true;
+        notice.classList.remove('visible');
     });
 })();
 </script>
