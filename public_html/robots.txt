@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /$
+Allow: /index.php
+Allow: /login.php
+Allow: /signup.php
+Allow: /privacy.php
+Allow: /terms.php
+
+Disallow: /dashboard.php
+Disallow: /questionnaire.php
+Disallow: /remediation.php
+Disallow: /report.php
+Disallow: /billing.php
+Disallow: /paystack_callback.php
+Disallow: /admin/
+Disallow: /webhooks/
+Disallow: /includes/
+
+Sitemap: https://compliance.cyber4rall.com/sitemap.xml

@@ -1,0 +1,7 @@
+# Contains real DB + Paystack credentials — never commit this
+public_html/config.php
+
+# OS/editor cruft
+.DS_Store
+*.log
+.vscode/
