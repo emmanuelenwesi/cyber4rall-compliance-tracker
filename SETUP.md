@@ -71,6 +71,11 @@ Run `sql/004_cancel_and_mfa.sql` (after 003). This adds:
 - `companies.cancels_at` — lets cancellation stop future billing without cutting off the period already paid for
 - `users.mfa_secret`, `mfa_enabled`, `mfa_recovery_codes` — TOTP two-factor authentication, no third-party service involved
 
+## Step 7c — Import the password reset migration
+Run `sql/005_password_reset.sql` (after 004). This adds `users.reset_token_hash` and `reset_token_expires` — password reset links work by hashing the token before storing it, the same principle as password hashing, so a database leak alone can't be used to reset anyone's password.
+
+Password reset emails go out via PHP's built-in `mail()`, which DirectAdmin/cPanel wires up to your domain's own mail setup automatically — no SMTP credentials needed. If reset emails aren't arriving, check your spam folder first, then check that your DirectAdmin account has outbound mail enabled (some hosts require a one-time toggle).
+
 ## Launch checklist — what's now built in
 - **Privacy Policy & Terms** — `/privacy.php` and `/terms.php`, written specifically for this product (NDPR-relevant, covers Paystack billing data, retention, and rights requests). Linked in the footer of every page.
 - **Cookie notice** — a small non-blocking banner (bottom of screen) explaining that only a necessary session cookie is used — no tracking/ad cookies to consent to in the first place.

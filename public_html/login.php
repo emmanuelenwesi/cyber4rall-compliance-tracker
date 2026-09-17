@@ -50,6 +50,7 @@ require __DIR__ . '/includes/header.php';
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required>
+        <p class="helper" style="margin:6px 0 0;"><a href="/forgot_password.php">Forgot password?</a></p>
 
         <div style="margin-top:20px;">
             <button type="submit">Log in</button>

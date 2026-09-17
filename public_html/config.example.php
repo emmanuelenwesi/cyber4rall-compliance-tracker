@@ -47,6 +47,11 @@ define('SOCIAL_LINKS', [
 // --- Default meta description (overridden per-page via $pageDescription) ---
 define('DEFAULT_META_DESCRIPTION', 'A guided NDPR / Nigeria Data Protection Act compliance self-assessment and remediation tracker, built by Cyber4rall.');
 
+// --- Email ---
+// Set to true only in local/dev testing to write emails to a log file
+// instead of sending them. Always false in production.
+define('MAIL_TEST_MODE', false);
+
 // --- Session security ---
 // Cookies only sent over HTTPS once SSL is active on the subdomain.
 define('FORCE_HTTPS_COOKIES', true);
