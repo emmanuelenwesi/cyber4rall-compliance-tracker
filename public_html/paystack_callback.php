@@ -29,7 +29,7 @@ if ($reference) {
         $customerCode = $data['customer']['customer_code'] ?? null;
         $periodEnd = (new DateTime())->modify('+30 days')->format('Y-m-d H:i:s');
 
-        $upd = $conn->prepare("UPDATE companies SET subscription_status = 'active', paystack_customer_code = ?, current_period_end = ? WHERE id = ?");
+        $upd = $conn->prepare("UPDATE companies SET subscription_status = 'active', paystack_customer_code = ?, current_period_end = ?, cancels_at = NULL WHERE id = ?");
         $upd->bind_param('ssi', $customerCode, $periodEnd, $companyId);
         $upd->execute();
         $upd->close();

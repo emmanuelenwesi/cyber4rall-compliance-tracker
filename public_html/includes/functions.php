@@ -190,6 +190,32 @@ function require_active_access(array $user): void
     }
 }
 
+/**
+ * The raw subscription_status column doesn't tell the whole story once
+ * cancellation-at-period-end is involved — this derives what to actually
+ * show/label the company as right now.
+ */
+function effective_status(array $company): string
+{
+    $now = new DateTime();
+
+    if ($company['subscription_status'] === 'trial') {
+        return has_active_access($company) ? 'trial' : 'trial_expired';
+    }
+
+    if ($company['subscription_status'] === 'active') {
+        $periodEnd = !empty($company['current_period_end']) ? new DateTime($company['current_period_end']) : null;
+        $cancelsAt = !empty($company['cancels_at']) ? new DateTime($company['cancels_at']) : null;
+
+        if ($cancelsAt && $cancelsAt <= $now) return 'cancelled';
+        if ($periodEnd && $periodEnd < $now) return 'expired';
+        if ($cancelsAt) return 'cancelling';
+        return 'active';
+    }
+
+    return $company['subscription_status']; // past_due or cancelled
+}
+
 function risk_label(float $score): string
 {
     if ($score >= 80) return 'Low Risk';

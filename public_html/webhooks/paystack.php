@@ -60,7 +60,7 @@ switch ($type) {
 
         if ($company) {
             $periodEnd = (new DateTime())->modify('+30 days')->format('Y-m-d H:i:s');
-            $stmt = $conn->prepare("UPDATE companies SET subscription_status = 'active', paystack_customer_code = ?, current_period_end = ? WHERE id = ?");
+            $stmt = $conn->prepare("UPDATE companies SET subscription_status = 'active', paystack_customer_code = ?, current_period_end = ?, cancels_at = NULL WHERE id = ?");
             $stmt->bind_param('ssi', $customerCode, $periodEnd, $company['id']);
             $stmt->execute();
             $stmt->close();
@@ -105,9 +105,12 @@ switch ($type) {
     case 'subscription.not_renew': {
         $subCode = $data['subscription_code'] ?? null;
         $company = find_company_by_subscription_code($conn, $subCode);
-        if ($company) {
-            $stmt = $conn->prepare("UPDATE companies SET subscription_status = 'cancelled' WHERE id = ?");
-            $stmt->bind_param('i', $company['id']);
+        if ($company && empty($company['cancels_at'])) {
+            // Mirrors the in-app cancel flow: stop future billing, but
+            // don't cut access before the period already paid for ends.
+            $cancelsAt = $company['current_period_end'] ?: date('Y-m-d H:i:s');
+            $stmt = $conn->prepare('UPDATE companies SET cancels_at = ? WHERE id = ?');
+            $stmt->bind_param('si', $cancelsAt, $company['id']);
             $stmt->execute();
             $stmt->close();
         }

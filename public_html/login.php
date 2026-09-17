@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/functions.php';
+require_once __DIR__ . '/includes/totp.php';
 
 if (current_user()) {
     header('Location: /dashboard.php');
@@ -22,6 +23,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->close();
 
     if ($userRow && password_verify($password, $userRow['password_hash'])) {
+        if (!empty($userRow['mfa_enabled'])) {
+            begin_mfa_challenge((int)$userRow['id']);
+            header('Location: /mfa_verify.php');
+            exit;
+        }
         login_user($userRow);
         header('Location: /dashboard.php');
         exit;

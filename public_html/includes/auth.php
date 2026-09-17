@@ -55,6 +55,24 @@ function login_user(array $userRow): void
         'role' => $userRow['role'],
         'is_platform_admin' => (int)$userRow['is_platform_admin'],
     ];
+    unset($_SESSION['pending_mfa_user_id']);
+}
+
+/**
+ * Password was correct but this user has MFA enabled — stash their id
+ * and send them to the verification step instead of logging in yet.
+ */
+function begin_mfa_challenge(int $userId): void
+{
+    start_secure_session();
+    session_regenerate_id(true);
+    $_SESSION['pending_mfa_user_id'] = $userId;
+}
+
+function pending_mfa_user_id(): ?int
+{
+    start_secure_session();
+    return isset($_SESSION['pending_mfa_user_id']) ? (int)$_SESSION['pending_mfa_user_id'] : null;
 }
 
 function logout_user(): void

@@ -54,6 +54,7 @@ log_pageview($user['company_id'] ?? null);
             <a href="/remediation.php">Remediation</a>
             <a href="/report.php">Report</a>
             <a href="/billing.php">Billing</a>
+            <a href="/account.php">Account</a>
             <?php if (!empty($user['is_platform_admin'])): ?>
             <a href="/admin/index.php">Admin</a>
             <?php endif; ?>
