@@ -66,6 +66,11 @@ The app charges ₦25,000/month per company, with a 14-day free trial on signup.
 ## Step 7 — Import the analytics migration
 Run `sql/003_analytics.sql` in phpMyAdmin (after the other two). This adds a lightweight, cookie-free `pageviews` table — no Google Analytics, no third-party tracking, just a simple log of which pages get visited, which fits a privacy-compliance product much better.
 
+## Step 7b — Import the MFA/cancellation migration
+Run `sql/004_cancel_and_mfa.sql` (after 003). This adds:
+- `companies.cancels_at` — lets cancellation stop future billing without cutting off the period already paid for
+- `users.mfa_secret`, `mfa_enabled`, `mfa_recovery_codes` — TOTP two-factor authentication, no third-party service involved
+
 ## Launch checklist — what's now built in
 - **Privacy Policy & Terms** — `/privacy.php` and `/terms.php`, written specifically for this product (NDPR-relevant, covers Paystack billing data, retention, and rights requests). Linked in the footer of every page.
 - **Cookie notice** — a small non-blocking banner (bottom of screen) explaining that only a necessary session cookie is used — no tracking/ad cookies to consent to in the first place.
