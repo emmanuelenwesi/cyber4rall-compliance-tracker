@@ -23,9 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fullName = trim($_POST['full_name'] ?? '');
     $email = trim(strtolower($_POST['email'] ?? ''));
     $password = $_POST['password'] ?? '';
+    $agreedToTerms = !empty($_POST['agree_terms']);
 
     if ($companyName === '' || $fullName === '' || $email === '' || $password === '') {
         $error = 'Please fill in every field.';
+    } elseif (!$agreedToTerms) {
+        $error = 'Please agree to the Terms & Privacy Policy to continue.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = 'Please enter a valid email address.';
     } elseif (strlen($password) < 8) {
@@ -111,6 +114,11 @@ require __DIR__ . '/includes/header.php';
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" minlength="8" required>
+
+        <label style="display:flex;align-items:flex-start;gap:8px;margin-top:16px;font-size:.88rem;color:var(--text-dim);">
+            <input type="checkbox" name="agree_terms" value="1" required style="width:auto;margin-top:3px;">
+            <span>I agree to the <a href="/terms.php" target="_blank">Terms &amp; Conditions</a> and <a href="/privacy.php" target="_blank">Privacy Policy</a>.</span>
+        </label>
 
         <div style="margin-top:20px;">
             <button type="submit">Create account</button>
