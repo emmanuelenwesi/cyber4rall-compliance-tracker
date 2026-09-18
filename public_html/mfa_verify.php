@@ -2,6 +2,7 @@
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/totp.php';
+require_once __DIR__ . '/includes/rate_limit.php';
 
 $userId = pending_mfa_user_id();
 if (!$userId) {
@@ -22,9 +23,21 @@ if (!$userRow || empty($userRow['mfa_enabled'])) {
 }
 
 $error = null;
+$MFA_MAX_ATTEMPTS = 5;
+$MFA_WINDOW_MINUTES = 15;
+$rateLimitKey = 'mfa_user_' . $userId;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
+
+    if (is_rate_limited('mfa_code', $rateLimitKey, $MFA_MAX_ATTEMPTS, $MFA_WINDOW_MINUTES)) {
+        // Too many wrong codes — don't let this screen be brute-forced.
+        // Force them back through the password step.
+        session_unset();
+        header('Location: /login.php?mfa_locked=1');
+        exit;
+    }
+
     $code = trim($_POST['code'] ?? '');
     $useRecovery = !empty($_POST['use_recovery']);
 
@@ -40,12 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: /dashboard.php');
             exit;
         }
+        record_rate_limit_event('mfa_code', $rateLimitKey);
         $error = 'That recovery code is invalid or has already been used.';
     } elseif (totp_verify($userRow['mfa_secret'], $code)) {
         login_user($userRow);
         header('Location: /dashboard.php');
         exit;
     } else {
+        record_rate_limit_event('mfa_code', $rateLimitKey);
         $error = 'Incorrect code. Codes refresh every 30 seconds — check your app and try the current one.';
     }
 }

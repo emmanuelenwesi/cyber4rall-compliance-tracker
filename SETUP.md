@@ -76,6 +76,9 @@ Run `sql/005_password_reset.sql` (after 004). This adds `users.reset_token_hash`
 
 Password reset emails go out via PHP's built-in `mail()`, which DirectAdmin/cPanel wires up to your domain's own mail setup automatically — no SMTP credentials needed. If reset emails aren't arriving, check your spam folder first, then check that your DirectAdmin account has outbound mail enabled (some hosts require a one-time toggle).
 
+## Step 7d — Import the rate-limiting migration
+Run `sql/006_rate_limiting.sql` (after 005). This adds a `rate_limit_events` table used to lock out repeated failed login attempts (5 per account / 15 min, plus 20 per IP address / 15 min to catch one attacker trying many accounts), repeated wrong MFA codes (5 attempts), and repeated password-reset requests (3 per email / 15 min, so the form can't be used to spam someone's inbox). No cron job needed — old rows are pruned automatically.
+
 ## Launch checklist — what's now built in
 - **Privacy Policy & Terms** — `/privacy.php` and `/terms.php`, written specifically for this product (NDPR-relevant, covers Paystack billing data, retention, and rights requests). Linked in the footer of every page.
 - **Cookie notice** — a small non-blocking banner (bottom of screen) explaining that only a necessary session cookie is used — no tracking/ad cookies to consent to in the first place.

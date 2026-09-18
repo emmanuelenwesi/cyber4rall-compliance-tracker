@@ -2,6 +2,7 @@
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/mail.php';
+require_once __DIR__ . '/includes/rate_limit.php';
 
 if (current_user()) {
     header('Location: /dashboard.php');
@@ -9,6 +10,8 @@ if (current_user()) {
 }
 
 $submitted = false;
+$RESET_MAX_PER_EMAIL = 3;
+$RESET_WINDOW_MINUTES = 15;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
@@ -17,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (trim($_POST['website'] ?? '') === '') {
         $email = trim(strtolower($_POST['email'] ?? ''));
 
-        if ($email !== '') {
+        if ($email !== '' && !is_rate_limited('password_reset', $email, $RESET_MAX_PER_EMAIL, $RESET_WINDOW_MINUTES)) {
             $conn = db();
             $stmt = $conn->prepare('SELECT id, full_name FROM users WHERE email = ?');
             $stmt->bind_param('s', $email);
@@ -26,6 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->close();
 
             if ($userRow) {
+                record_rate_limit_event('password_reset', $email);
+
                 $token = bin2hex(random_bytes(32));
                 $tokenHash = hash('sha256', $token);
                 $expires = (new DateTime())->modify('+1 hour')->format('Y-m-d H:i:s');
@@ -44,8 +49,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 send_email($email, 'Reset your password', $body);
             }
         }
-        // Always show the same message whether or not the email exists —
-        // otherwise this form becomes a way to check who has an account.
+        // Always show the same message whether or not the email exists,
+        // or whether it was rate-limited — otherwise any of these become
+        // a way to check who has an account.
         $submitted = true;
     } else {
         $submitted = true; // silently drop bot submissions but look normal
