@@ -78,10 +78,12 @@ require __DIR__ . '/includes/header.php';
         </form>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="/assets/js/qrcode.min.js"></script>
     <script>
         // Rendered entirely client-side; the secret never leaves your own
         // server except to your own browser here, unlike third-party QR APIs.
+        // The library itself is self-hosted rather than loaded from a CDN,
+        // so there's no third-party script dependency on this page at all.
         new QRCode(document.getElementById("qrcode"), {
             text: <?= json_encode($provisioningUri) ?>,
             width: 200,
