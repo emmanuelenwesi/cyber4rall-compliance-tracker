@@ -2,7 +2,7 @@
 <footer class="footer">
     <div class="footer-inner">
         <div class="footer-row">
-            <div>&copy; <?= date('Y') ?> Cyber4rall — NDPR Compliance Tracker</div>
+            <div>&copy; <?= date('Y') ?> Cyber4rall NDPR Compliance Tracker</div>
             <div class="footer-links">
                 <a href="/privacy.php">Privacy Policy</a>
                 <a href="/terms.php">Terms &amp; Conditions</a>
@@ -18,7 +18,7 @@
 </footer>
 
 <div id="cookie-notice" class="cookie-notice no-print">
-    <p>We use only the essential cookies needed to keep you signed in — no tracking or advertising cookies. See our <a href="/privacy.php">Privacy Policy</a>.</p>
+    <p>We use only the essential cookies needed to keep you signed in, no tracking or advertising cookies. See our <a href="/privacy.php">Privacy Policy</a>.</p>
     <button id="cookie-ack" class="btn btn-small">Got it</button>
 </div>
 <script>

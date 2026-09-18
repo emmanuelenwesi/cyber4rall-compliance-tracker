@@ -7,7 +7,7 @@ $user = require_login();
 $companyId = $user['company_id'];
 
 $reference = $_GET['reference'] ?? $_GET['trxref'] ?? '';
-$message = 'We could not confirm your payment. If you were charged, contact support — no need to pay twice.';
+$message = 'We could not confirm your payment. If you were charged, contact support. No need to pay twice.';
 $success = false;
 
 if ($reference) {
@@ -15,7 +15,7 @@ if ($reference) {
     if ($data && (int)($data['metadata']['company_id'] ?? 0) === $companyId) {
         $conn = db();
 
-        // Log the payment (idempotent — reference is unique)
+        // Log the payment (idempotent since the reference is unique)
         $amountKobo = (int)($data['amount'] ?? 0);
         $status = $data['status'] ?? 'unknown';
         $paidAt = !empty($data['paid_at']) ? date('Y-m-d H:i:s', strtotime($data['paid_at'])) : null;
@@ -35,7 +35,7 @@ if ($reference) {
         $upd->close();
 
         $success = true;
-        $message = 'Payment confirmed — your subscription is active.';
+        $message = 'Payment confirmed. Your subscription is active.';
     }
 }
 

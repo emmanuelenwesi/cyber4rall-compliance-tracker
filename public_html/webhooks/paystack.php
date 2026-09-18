@@ -3,7 +3,7 @@
  * Paystack webhook endpoint.
  * Configure this URL in Paystack Dashboard > Settings > API Keys & Webhooks:
  *   https://compliance.cyber4rall.com/webhooks/paystack.php
- * No login/CSRF here — Paystack calls this server-to-server. Trust is
+ * No login/CSRF here since Paystack calls this server-to-server. Trust is
  * established purely via the signature check below.
  */
 require_once __DIR__ . '/../includes/db.php';

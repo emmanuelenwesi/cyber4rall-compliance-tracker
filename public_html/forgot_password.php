@@ -44,13 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $body = "Hi " . $userRow['full_name'] . ",\n\n"
                       . "Someone requested a password reset for your " . SITE_NAME . " account.\n\n"
                       . "Reset your password here (valid for 1 hour):\n" . $resetLink . "\n\n"
-                      . "If you didn't request this, you can safely ignore this email — your password hasn't been changed.\n\n"
+                      . "If you didn't request this, you can safely ignore this email. Your password hasn't been changed.\n\n"
                       . SITE_NAME;
                 send_email($email, 'Reset your password', $body);
             }
         }
         // Always show the same message whether or not the email exists,
-        // or whether it was rate-limited — otherwise any of these become
+        // or whether it was rate-limited, otherwise any of these become
         // a way to check who has an account.
         $submitted = true;
     } else {

@@ -1,7 +1,7 @@
 <?php
 /**
  * Site configuration TEMPLATE.
- * Copy this to config.php and fill in real values — config.php itself is
+ * Copy this to config.php and fill in real values. config.php itself is
  * gitignored so your DB password and Paystack keys never end up in version control.
  */
 
@@ -27,7 +27,7 @@ define('PAYSTACK_PLAN_CODE', 'PLN_REPLACE_ME');
 define('SUBSCRIPTION_PRICE_NAIRA', 25000);
 define('TRIAL_DAYS', 14);
 
-// --- Brand assets (hotlinked from the main cyber4rall.com site — same domain, no CORS issue) ---
+// --- Brand assets (hotlinked from the main cyber4rall.com site: same domain, so no CORS issue) ---
 define('BRAND_LOGO_URL', 'https://www.cyber4rall.com/wp-content/uploads/2026/06/Gemini_Generated_Image_9vm5uo9vm5uo9vm5-removebg-preview-removebg-preview-1-4-50x57.png');
 define('BRAND_ICON_URL', 'https://www.cyber4rall.com/wp-content/uploads/2026/06/cropped-cyber4rall_site_icon-trans-270x270.png');
 define('BRAND_OG_IMAGE_URL', 'https://www.cyber4rall.com/wp-content/uploads/2026/06/pexels-photo-5380597-1024x682.jpeg');

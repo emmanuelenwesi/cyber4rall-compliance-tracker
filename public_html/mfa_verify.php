@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     verify_csrf();
 
     if (is_rate_limited('mfa_code', $rateLimitKey, $MFA_MAX_ATTEMPTS, $MFA_WINDOW_MINUTES)) {
-        // Too many wrong codes — don't let this screen be brute-forced.
+        // Too many wrong codes: don't let this screen be brute-forced.
         // Force them back through the password step.
         session_unset();
         header('Location: /login.php?mfa_locked=1');
@@ -61,7 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } else {
         record_rate_limit_event('mfa_code', $rateLimitKey);
-        $error = 'Incorrect code. Codes refresh every 30 seconds — check your app and try the current one.';
+        $error = 'Incorrect code. Codes refresh every 30 seconds. Check your app and try the current one.';
     }
 }
 

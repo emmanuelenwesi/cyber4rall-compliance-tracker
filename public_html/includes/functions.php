@@ -192,7 +192,7 @@ function require_active_access(array $user): void
 
 /**
  * The raw subscription_status column doesn't tell the whole story once
- * cancellation-at-period-end is involved — this derives what to actually
+ * cancellation-at-period-end is involved; this derives what to actually
  * show/label the company as right now.
  */
 function effective_status(array $company): string

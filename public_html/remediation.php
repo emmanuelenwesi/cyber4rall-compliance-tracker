@@ -78,7 +78,7 @@ require __DIR__ . '/includes/header.php';
         </thead>
         <tbody>
         <?php if (!$items): ?>
-            <tr><td colspan="5" class="helper">No remediation items yet — complete the questionnaire to generate some, or add one above.</td></tr>
+            <tr><td colspan="5" class="helper">No remediation items yet. Complete the questionnaire to generate some, or add one above.</td></tr>
         <?php endif; ?>
         <?php foreach ($items as $item): ?>
             <tr>
@@ -86,8 +86,8 @@ require __DIR__ . '/includes/header.php';
                     <div><?= e($item['title']) ?></div>
                     <?php if ($item['details']): ?><div class="helper" style="margin-top:2px;"><?= e($item['details']) ?></div><?php endif; ?>
                 </td>
-                <td><?= e($item['assigned_to'] ?: '—') ?></td>
-                <td><?= e($item['due_date'] ?: '—') ?></td>
+                <td><?= e($item['assigned_to'] ?: '-') ?></td>
+                <td><?= e($item['due_date'] ?: '-') ?></td>
                 <td><span class="status-badge status-<?= e($item['status']) ?>"><?= e(ucwords(str_replace('_', ' ', $item['status']))) ?></span></td>
                 <td>
                     <form method="post" style="display:flex;gap:6px;">

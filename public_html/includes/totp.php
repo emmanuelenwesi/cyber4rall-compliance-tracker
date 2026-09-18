@@ -1,10 +1,10 @@
 <?php
 /**
- * Minimal TOTP (RFC 6238) implementation — compatible with Google
+ * Minimal TOTP (RFC 6238) implementation, compatible with Google
  * Authenticator, Authy, 1Password, etc. No external library, because
  * shared hosting here has no Composer and we don't want the MFA secret
  * ever leaving our own server (e.g. to a third-party QR image API).
- * The QR code itself is rendered client-side in the user's browser —
+ * The QR code itself is rendered client-side in the user's browser;
  * see mfa_setup.php.
  */
 

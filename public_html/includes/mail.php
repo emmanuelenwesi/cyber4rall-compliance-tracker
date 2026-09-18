@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config.php';
 /**
  * Send a plain-text email via the server's local mail transport.
  * On DirectAdmin/cPanel shared hosting, PHP's mail() is normally wired up
- * to send as the domain's own mail setup already — no SMTP credentials
+ * to send as the domain's own mail setup already, no SMTP credentials
  * or third-party service needed.
  *
  * In local/dev environments, define MAIL_TEST_MODE => true in config.php

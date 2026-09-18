@@ -64,7 +64,7 @@ $pageTitle = 'Questionnaire';
 require __DIR__ . '/includes/header.php';
 ?>
 <h1>NDPR Compliance Questionnaire</h1>
-<p class="helper">Answer each question based on your organization's current practice. Save at any point — you can come back and finish later.</p>
+<p class="helper">Answer each question based on your organization's current practice. Save at any point. You can come back and finish later.</p>
 
 <?php if ($saved): ?><div class="success-box">Your answers have been saved.</div><?php endif; ?>
 

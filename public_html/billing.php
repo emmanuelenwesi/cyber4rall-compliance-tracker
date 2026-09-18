@@ -32,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
 
         if (!password_verify($_POST['current_password'] ?? '', $hash)) {
-            $error = 'Incorrect password — subscription was not cancelled.';
+            $error = 'Incorrect password. Subscription was not cancelled.';
             $showCancelConfirm = true;
         } else {
             // Stop future billing immediately, but keep access until the
-            // period already paid for actually ends — not right now.
+            // period already paid for actually ends, not right now.
             if ($company['paystack_subscription_code'] && $company['paystack_email_token']) {
                 paystack_disable_subscription($company['paystack_subscription_code'], $company['paystack_email_token']);
             }
@@ -71,7 +71,7 @@ require __DIR__ . '/includes/header.php';
         <form method="post">
             <?= csrf_field() ?>
             <input type="hidden" name="action" value="subscribe">
-            <button type="submit">Subscribe — ₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month</button>
+            <button type="submit">Subscribe (₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month)</button>
         </form>
 
     <?php elseif ($status === 'trial_expired'): ?>
@@ -80,19 +80,19 @@ require __DIR__ . '/includes/header.php';
         <form method="post">
             <?= csrf_field() ?>
             <input type="hidden" name="action" value="subscribe">
-            <button type="submit">Subscribe — ₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month</button>
+            <button type="submit">Subscribe (₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month)</button>
         </form>
 
     <?php elseif ($status === 'active'): ?>
         <h2>Active subscription</h2>
-        <p>₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month — next billing date <?= e(date('j F Y', strtotime($company['current_period_end']))) ?>.</p>
+        <p>₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month. Next billing date <?= e(date('j F Y', strtotime($company['current_period_end']))) ?>.</p>
 
         <?php if (!$showCancelConfirm): ?>
             <a class="btn btn-secondary" href="/billing.php?confirm_cancel=1">Cancel subscription</a>
         <?php else: ?>
             <div class="panel" style="border-color:var(--risk-high);background:rgba(224,120,90,.08);">
                 <h3 style="color:var(--risk-high);">Confirm cancellation</h3>
-                <p class="helper">You'll keep full access until <?= e(date('j F Y', strtotime($company['current_period_end']))) ?> — no further charges after that. Enter your password to confirm.</p>
+                <p class="helper">You'll keep full access until <?= e(date('j F Y', strtotime($company['current_period_end']))) ?>, with no further charges after that. Enter your password to confirm.</p>
                 <form method="post">
                     <?= csrf_field() ?>
                     <input type="hidden" name="action" value="cancel_confirm">
@@ -121,7 +121,7 @@ require __DIR__ . '/includes/header.php';
         <form method="post">
             <?= csrf_field() ?>
             <input type="hidden" name="action" value="subscribe">
-            <button type="submit">Retry — ₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month</button>
+            <button type="submit">Retry (₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month)</button>
         </form>
 
     <?php else: ?>
@@ -130,7 +130,7 @@ require __DIR__ . '/includes/header.php';
         <form method="post">
             <?= csrf_field() ?>
             <input type="hidden" name="action" value="subscribe">
-            <button type="submit">Subscribe — ₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month</button>
+            <button type="submit">Subscribe (₦<?= number_format(SUBSCRIPTION_PRICE_NAIRA) ?>/month)</button>
         </form>
     <?php endif; ?>
 </div>

@@ -28,7 +28,7 @@ require __DIR__ . '/includes/header.php';
     <button onclick="window.print()">Print / Save as PDF</button>
 </div>
 
-<h1><?= e($company['name']) ?> — NDPR Compliance Report</h1>
+<h1>NDPR Compliance Report for <?= e($company['name']) ?></h1>
 <p class="helper">Generated <?= date('j F Y') ?></p>
 
 <div class="panel">
@@ -55,13 +55,13 @@ require __DIR__ . '/includes/header.php';
         <thead><tr><th>Item</th><th>Assigned to</th><th>Due</th><th>Status</th></tr></thead>
         <tbody>
         <?php if (!$openItems): ?>
-            <tr><td colspan="4" class="helper">No open items — great work.</td></tr>
+            <tr><td colspan="4" class="helper">No open items. Great work.</td></tr>
         <?php endif; ?>
         <?php foreach ($openItems as $item): ?>
             <tr>
                 <td><?= e($item['title']) ?></td>
-                <td><?= e($item['assigned_to'] ?: '—') ?></td>
-                <td><?= e($item['due_date'] ?: '—') ?></td>
+                <td><?= e($item['assigned_to'] ?: '-') ?></td>
+                <td><?= e($item['due_date'] ?: '-') ?></td>
                 <td><?= e(ucwords(str_replace('_', ' ', $item['status']))) ?></td>
             </tr>
         <?php endforeach; ?>

@@ -3,7 +3,7 @@ require_once __DIR__ . '/db.php';
 
 /**
  * Log a pageview against the current request. Fails silently (analytics
- * should never break the page) — e.g. before the 003_analytics.sql
+ * should never break the page), e.g. before the 003_analytics.sql
  * migration has been run.
  */
 function log_pageview(?int $companyId = null): void
@@ -18,6 +18,6 @@ function log_pageview(?int $companyId = null): void
         $stmt->execute();
         $stmt->close();
     } catch (Throwable $e) {
-        // Analytics table may not exist yet, or DB hiccup — never fatal.
+        // Analytics table may not exist yet, or DB hiccup; never fatal.
     }
 }

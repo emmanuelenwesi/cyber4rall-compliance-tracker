@@ -59,7 +59,7 @@ function login_user(array $userRow): void
 }
 
 /**
- * Password was correct but this user has MFA enabled — stash their id
+ * Password was correct but this user has MFA enabled; stash their id
  * and send them to the verification step instead of logging in yet.
  */
 function begin_mfa_challenge(int $userId): void

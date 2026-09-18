@@ -9,7 +9,7 @@ $conn = db();
 $error = null;
 $recoveryCodesToShow = null;
 
-// Generate (or reuse) a pending secret for this setup session — not saved
+// Generate (or reuse) a pending secret for this setup session, not saved
 // to the user's account until they prove they can generate a valid code.
 if (empty($_SESSION['mfa_pending_secret'])) {
     $_SESSION['mfa_pending_secret'] = totp_generate_secret();
@@ -48,7 +48,7 @@ require __DIR__ . '/includes/header.php';
     <div class="panel">
         <div class="success-box">Two-factor authentication is now enabled.</div>
         <h2>Save your recovery codes</h2>
-        <p class="helper">If you lose access to your authenticator app, each of these codes can be used once to sign in instead. Save them somewhere safe — they won't be shown again.</p>
+        <p class="helper">If you lose access to your authenticator app, each of these codes can be used once to sign in instead. Save them somewhere safe. They won't be shown again.</p>
         <div class="mono panel" style="background:var(--bg);line-height:2;">
             <?php foreach ($recoveryCodesToShow as $rc): ?>
                 <?= e($rc) ?><br>
@@ -80,7 +80,7 @@ require __DIR__ . '/includes/header.php';
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
-        // Rendered entirely client-side — the secret never leaves your own
+        // Rendered entirely client-side; the secret never leaves your own
         // server except to your own browser here, unlike third-party QR APIs.
         new QRCode(document.getElementById("qrcode"), {
             text: <?= json_encode($provisioningUri) ?>,

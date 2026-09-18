@@ -15,19 +15,19 @@ log_pageview($user['company_id'] ?? null);
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($pageTitle) ?> — <?= e(SITE_NAME) ?></title>
+<title><?= e($pageTitle) ?> | <?= e(SITE_NAME) ?></title>
 <meta name="description" content="<?= e($pageDescription) ?>">
 <link rel="canonical" href="<?= e($canonicalUrl) ?>">
 
 <!-- Social preview -->
 <meta property="og:site_name" content="<?= e(SITE_NAME) ?>">
-<meta property="og:title" content="<?= e($pageTitle) ?> — <?= e(SITE_NAME) ?>">
+<meta property="og:title" content="<?= e($pageTitle) ?> | <?= e(SITE_NAME) ?>">
 <meta property="og:description" content="<?= e($pageDescription) ?>">
 <meta property="og:image" content="<?= e(BRAND_OG_IMAGE_URL) ?>">
 <meta property="og:type" content="website">
 <meta property="og:url" content="<?= e($canonicalUrl) ?>">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="<?= e($pageTitle) ?> — <?= e(SITE_NAME) ?>">
+<meta name="twitter:title" content="<?= e($pageTitle) ?> | <?= e(SITE_NAME) ?>">
 <meta name="twitter:description" content="<?= e($pageDescription) ?>">
 <meta name="twitter:image" content="<?= e(BRAND_OG_IMAGE_URL) ?>">
 
@@ -72,12 +72,12 @@ if ($user && empty($user['is_platform_admin']) && !in_array($currentScript, ['bi
         if ($company['subscription_status'] === 'trial' && has_active_access($company)) {
             $daysLeft = (new DateTime())->diff(new DateTime($company['trial_ends_at']))->days;
             echo '<div class="panel no-print" style="margin-bottom:20px;border-color:var(--risk-mid);">'
-               . 'Free trial — ' . $daysLeft . ' day' . ($daysLeft === 1 ? '' : 's') . ' left. '
+               . 'Free trial: ' . $daysLeft . ' day' . ($daysLeft === 1 ? '' : 's') . ' left. '
                . '<a href="/billing.php">Subscribe</a> to keep access after it ends.</div>';
         } elseif (!has_active_access($company)) {
             $msg = $company['subscription_status'] === 'past_due'
-                ? 'Your last payment failed — access is paused until this is resolved.'
-                : 'Your trial or subscription has ended — access is paused.';
+                ? 'Your last payment failed. Access is paused until this is resolved.'
+                : 'Your trial or subscription has ended. Access is paused.';
             echo '<div class="panel no-print" style="margin-bottom:20px;border-color:var(--risk-high);">'
                . e($msg) . ' <a href="/billing.php">Go to billing</a></div>';
         }

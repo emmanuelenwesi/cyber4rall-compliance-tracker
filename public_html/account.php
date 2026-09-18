@@ -72,7 +72,7 @@ require __DIR__ . '/includes/header.php';
 <div class="panel" style="margin-top:16px;">
     <h2>Two-factor authentication</h2>
     <?php if (!empty($userRow['mfa_enabled'])): ?>
-        <p class="success-box" style="display:inline-block;">Enabled — your account requires a code from your authenticator app to sign in.</p>
+        <p class="success-box" style="display:inline-block;">Enabled. Your account requires a code from your authenticator app to sign in.</p>
         <form method="post" onsubmit="return confirm('Turn off two-factor authentication? This makes your account easier to break into if your password leaks.');">
             <?= csrf_field() ?>
             <input type="hidden" name="action" value="disable_mfa">
@@ -81,7 +81,7 @@ require __DIR__ . '/includes/header.php';
             <div style="margin-top:16px;"><button type="submit" class="btn-secondary">Disable two-factor authentication</button></div>
         </form>
     <?php else: ?>
-        <p class="helper">Add an extra layer of security — after your password, you'll also need a code from an app like Google Authenticator or Authy.</p>
+        <p class="helper">Add an extra layer of security: after your password, you'll also need a code from an app like Google Authenticator or Authy.</p>
         <a class="btn" href="/mfa_setup.php">Set up two-factor authentication</a>
     <?php endif; ?>
 </div>

@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Only failures count toward lockout — successful logins never do.
+        // Only failures count toward lockout; successful logins never do.
         record_rate_limit_event('login_email', $email);
         record_rate_limit_event('login_ip', $ip);
         $error = 'Incorrect email or password.';
