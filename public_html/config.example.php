@@ -27,6 +27,13 @@ define('PAYSTACK_PLAN_CODE', 'PLN_REPLACE_ME');
 define('SUBSCRIPTION_PRICE_NAIRA', 25000);
 define('TRIAL_DAYS', 14);
 
+// --- Session timeouts ---
+// Idle timeout: logged out after this many minutes of no activity.
+// Absolute timeout: logged out this many hours after login, active or not
+// (limits how long a stolen session cookie stays useful).
+define('SESSION_IDLE_TIMEOUT_MINUTES', 30);
+define('SESSION_ABSOLUTE_TIMEOUT_HOURS', 12);
+
 // --- Brand assets (hotlinked from the main cyber4rall.com site: same domain, so no CORS issue) ---
 define('BRAND_LOGO_URL', 'https://www.cyber4rall.com/wp-content/uploads/2026/06/Gemini_Generated_Image_9vm5uo9vm5uo9vm5-removebg-preview-removebg-preview-1-4-50x57.png');
 define('BRAND_ICON_URL', 'https://www.cyber4rall.com/wp-content/uploads/2026/06/cropped-cyber4rall_site_icon-trans-270x270.png');

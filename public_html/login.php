@@ -10,8 +10,13 @@ if (current_user()) {
 }
 
 $error = null;
+$info = null;
 if (isset($_GET['mfa_locked'])) {
     $error = 'Too many incorrect codes. Please log in again.';
+} elseif (isset($_GET['timeout']) && $_GET['timeout'] === 'idle') {
+    $info = 'You were logged out after ' . SESSION_IDLE_TIMEOUT_MINUTES . ' minutes of inactivity. Please log in again.';
+} elseif (isset($_GET['timeout']) && $_GET['timeout'] === 'absolute') {
+    $info = 'For your security, you were logged out after ' . SESSION_ABSOLUTE_TIMEOUT_HOURS . ' hours. Please log in again.';
 }
 $LOGIN_MAX_PER_EMAIL = 5;
 $LOGIN_MAX_PER_IP = 20;
@@ -60,6 +65,7 @@ require __DIR__ . '/includes/header.php';
     <h1>Log in</h1>
 
     <?php if ($error): ?><div class="error-box"><?= e($error) ?></div><?php endif; ?>
+    <?php if ($info): ?><div class="success-box"><?= e($info) ?></div><?php endif; ?>
 
     <form method="post" class="panel">
         <?= csrf_field() ?>

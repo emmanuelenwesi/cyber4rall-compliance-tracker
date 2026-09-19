@@ -23,6 +23,34 @@ function current_user(): ?array
     return $_SESSION['user'] ?? null;
 }
 
+/**
+ * Enforce idle and absolute session timeouts. Called by require_login()
+ * on every authenticated request. Logs out and redirects if either
+ * timeout has been exceeded; otherwise refreshes the idle clock.
+ */
+function enforce_session_timeouts(): void
+{
+    if (empty($_SESSION['user'])) return;
+
+    $now = time();
+    $idleLimit = (defined('SESSION_IDLE_TIMEOUT_MINUTES') ? SESSION_IDLE_TIMEOUT_MINUTES : 30) * 60;
+    $absoluteLimit = (defined('SESSION_ABSOLUTE_TIMEOUT_HOURS') ? SESSION_ABSOLUTE_TIMEOUT_HOURS : 12) * 3600;
+
+    if (isset($_SESSION['login_time']) && ($now - $_SESSION['login_time']) > $absoluteLimit) {
+        logout_user();
+        header('Location: /login.php?timeout=absolute');
+        exit;
+    }
+
+    if (isset($_SESSION['last_activity']) && ($now - $_SESSION['last_activity']) > $idleLimit) {
+        logout_user();
+        header('Location: /login.php?timeout=idle');
+        exit;
+    }
+
+    $_SESSION['last_activity'] = $now;
+}
+
 function require_login(): array
 {
     $user = current_user();
@@ -30,6 +58,7 @@ function require_login(): array
         header('Location: /login.php');
         exit;
     }
+    enforce_session_timeouts();
     return $user;
 }
 
@@ -55,6 +84,8 @@ function login_user(array $userRow): void
         'role' => $userRow['role'],
         'is_platform_admin' => (int)$userRow['is_platform_admin'],
     ];
+    $_SESSION['login_time'] = time();
+    $_SESSION['last_activity'] = time();
     unset($_SESSION['pending_mfa_user_id']);
 }
 
