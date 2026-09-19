@@ -2,11 +2,14 @@
 require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/includes/totp.php';
+require_once __DIR__ . '/includes/rate_limit.php';
 
 $user = require_login();
 $conn = db();
 $error = null;
 $success = null;
+$MFA_DISABLE_MAX_ATTEMPTS = 5;
+$MFA_DISABLE_WINDOW_MINUTES = 15;
 
 $stmt = $conn->prepare('SELECT * FROM users WHERE id = ?');
 $stmt->bind_param('i', $user['id']);
@@ -34,16 +37,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $success = 'Password updated.';
         }
     } elseif ($action === 'disable_mfa') {
-        $current = $_POST['current_password'] ?? '';
-        if (!password_verify($current, $userRow['password_hash'])) {
-            $error = 'Your current password is incorrect.';
+        $rateLimitKey = 'mfa_disable_user_' . $user['id'];
+
+        if (is_rate_limited('mfa_disable', $rateLimitKey, $MFA_DISABLE_MAX_ATTEMPTS, $MFA_DISABLE_WINDOW_MINUTES)) {
+            $error = "Too many attempts. Please wait {$MFA_DISABLE_WINDOW_MINUTES} minutes and try again.";
         } else {
-            $upd = $conn->prepare('UPDATE users SET mfa_enabled = 0, mfa_secret = NULL, mfa_recovery_codes = NULL WHERE id = ?');
-            $upd->bind_param('i', $user['id']);
-            $upd->execute();
-            $upd->close();
-            $success = 'Two-factor authentication has been turned off.';
-            $userRow['mfa_enabled'] = 0;
+            $current = $_POST['current_password'] ?? '';
+            $code = trim($_POST['current_code'] ?? '');
+
+            if (!password_verify($current, $userRow['password_hash'])) {
+                record_rate_limit_event('mfa_disable', $rateLimitKey);
+                $error = 'Your password is incorrect.';
+            } else {
+                $recoveryCodes = json_decode($userRow['mfa_recovery_codes'] ?? '[]', true) ?: [];
+                $codeOk = totp_verify($userRow['mfa_secret'], $code) || totp_consume_recovery_code($recoveryCodes, $code);
+
+                if (!$codeOk) {
+                    record_rate_limit_event('mfa_disable', $rateLimitKey);
+                    $error = 'That code is incorrect. Enter the current 6-digit code from your authenticator app, or a recovery code.';
+                } else {
+                    $upd = $conn->prepare('UPDATE users SET mfa_enabled = 0, mfa_secret = NULL, mfa_recovery_codes = NULL WHERE id = ?');
+                    $upd->bind_param('i', $user['id']);
+                    $upd->execute();
+                    $upd->close();
+                    $success = 'Two-factor authentication has been turned off.';
+                    $userRow['mfa_enabled'] = 0;
+                }
+            }
         }
     }
 }
@@ -76,8 +96,10 @@ require __DIR__ . '/includes/header.php';
         <form method="post" onsubmit="return confirm('Turn off two-factor authentication? This makes your account easier to break into if your password leaks.');">
             <?= csrf_field() ?>
             <input type="hidden" name="action" value="disable_mfa">
-            <label for="mfa_current_password">Confirm your password to disable</label>
+            <label for="mfa_current_password">Password</label>
             <input type="password" id="mfa_current_password" name="current_password" required style="max-width:280px;">
+            <label for="mfa_current_code">Current 6-digit code from your authenticator app (or a recovery code)</label>
+            <input type="text" id="mfa_current_code" name="current_code" required style="max-width:280px;">
             <div style="margin-top:16px;"><button type="submit" class="btn-secondary">Disable two-factor authentication</button></div>
         </form>
     <?php else: ?>
